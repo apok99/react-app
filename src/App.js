@@ -1,6 +1,5 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-import loadUsers from './Components/dataFunctions'
 import axios from 'axios';
 import api from './Components/api';
 
@@ -12,8 +11,6 @@ function App() {
   const [usersCopy, setUsersCopy] = useState([]); 
 
   useEffect(() => {
-    //  setUsers(loadUsers());
-    // console.log(loadUsers());
     axios.get(api+'users').then((res) => {
       setUsers(res.data);
       setUsersCopy(res.data);
@@ -44,22 +41,21 @@ function App() {
   }
 
   const filter = (filter) => {
-
     setUsersCopy([]);
-    let tempArrayUser = [];
-    users.filter((user, i) => {
-      return (user.name.includes(filter.toUpperCase())) ? tempArrayUser.push(user) : false;
-      // return objectKeys.forEach((index) => {
-      //   // (user[index].includes(filter.toUpperCase())) ? tempArrayUser.push(user) : false;
-      //   let string = user[index];
-
-  
-      //   if (string.includes(filter.toUpperCase())) {
-      //       tempArrayUser.push(user);
-      //   } 
-      // })
-    })
-    setUsersCopy(tempArrayUser);
+    let arrayTemp = [];
+    let arrayIds = [];
+    users.forEach((user, i) => {
+      objectKeys.forEach(key => {
+        //El error se producia al final por que habia que indicarle que es un String obligatorio
+        if (String(user[key]).toUpperCase().includes(String(filter.toUpperCase()))) {
+          if (!arrayIds.includes(user.id)) {
+              arrayTemp.push(user);
+              arrayIds.push(user.id);
+          }
+        }
+      })
+    }) 
+    setUsersCopy(arrayTemp);
   }
 
   return (
